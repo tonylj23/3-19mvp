@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/empty_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/net_error_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="网络异常，点击重试"
+        android:layout_gravity="center"
+        android:textSize="20sp"
+        android:textColor="@android:color/darker_gray"/>
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/empty_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/SpinKitView.Circle"
+        app:SpinKit_Color="@color/colorPrimary"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        />
+</FrameLayout>
