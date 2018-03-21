@@ -22,6 +22,17 @@ android {
     }
 }
 
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '26.0.2'
+            }
+        }
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.0.2'
@@ -77,4 +88,5 @@ dependencies {
 
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
 
+    compile 'com.zzhoujay.richtext:richtext:3.0.5'
 }

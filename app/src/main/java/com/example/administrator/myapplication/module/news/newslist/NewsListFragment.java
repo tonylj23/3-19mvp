@@ -20,6 +20,7 @@ import com.example.administrator.myapplication.module.base.BaseFragment;
 import com.example.administrator.myapplication.module.base.IBasePresenter;
 import com.example.administrator.myapplication.utils.RecyclerViewHelper;
 import com.example.administrator.myapplication.utils.SliderHelper;
+import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class NewsListFragment extends BaseFragment<IBasePresenter> implements IN
 
     @Override
     public void loadData(List<NewsMultiItem> data) {
-        newsListAdapter.addData(data);
+        newsListAdapter.setNewData(data);
 
 //        if (isDivided) {
 //            view.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
@@ -72,7 +73,8 @@ public class NewsListFragment extends BaseFragment<IBasePresenter> implements IN
 
     @Override
     public void loadMoreData(List<NewsMultiItem> data) {
-
+        newsListAdapter.loadMoreComplete();
+        newsListAdapter.addData(data);
     }
 
     @Override
@@ -81,16 +83,30 @@ public class NewsListFragment extends BaseFragment<IBasePresenter> implements IN
     }
 
     @Override
-    public void finishRefresh() {
+    public void onResume() {
+        super.onResume();
+        if (mAdSlider != null) {
+            mAdSlider.startAutoCycle();
+        }
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAdSlider != null) {
+            mAdSlider.stopAutoCycle();
+        }
     }
 
     @Override
     public void loadAdData(NewsInfo newsInfo) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.head_news_list, null);
-        mAdSlider = (SliderLayout) view.findViewById(R.id.slider_ads);
+        mAdSlider = view.findViewById(R.id.slider_ads);
         SliderHelper.initAdSlider(mContext, mAdSlider, newsInfo);
-        newsListAdapter.addHeaderView(view);
+        int headerLayoutCount = newsListAdapter.getHeaderLayoutCount();
+
+//        newsListAdapter.addHeaderView(view);
+        Logger.d("headerLayoutCount::"+headerLayoutCount);
     }
 
     @Override
@@ -105,16 +121,10 @@ public class NewsListFragment extends BaseFragment<IBasePresenter> implements IN
         mRvNewsList.setItemAnimator(new DefaultItemAnimator());
 //        SlideInRightAnimationAdapter animAdapter = new SlideInRightAnimationAdapter(newsListAdapter);
 //        RecyclerViewHelper.initRecyclerViewV(mContext, mRvNewsList, true, new AlphaInAnimationAdapter(animAdapter));
-//        newsListAdapter.setre(new OnRequestDataListener() {
-//            @Override
-//            public void onLoadMore() {
-//                mPresenter.getMoreData();
-//            }
-//        });
-        newsListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        newsListAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+            public void onLoadMoreRequested() {
+                newsListPresenter.getMoreData();
             }
         });
     }

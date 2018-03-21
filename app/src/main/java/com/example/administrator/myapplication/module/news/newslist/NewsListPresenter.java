@@ -46,7 +46,7 @@ public class NewsListPresenter implements IBasePresenter {
     @Override
     public void getData(final boolean isRefresh) {
         Observable<List<NewsInfo>> newsList = RetrofitService.getNewsList(mNewsId, mPage);
-        newsList .subscribeOn(Schedulers.io())
+        newsList.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(new Function<List<NewsInfo>, ObservableSource<NewsInfo>>() {
                     @Override
@@ -120,6 +120,40 @@ public class NewsListPresenter implements IBasePresenter {
 
     @Override
     public void getMoreData() {
+        RetrofitService.getNewsList(mNewsId, mPage)
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<List<NewsInfo>, ObservableSource<NewsInfo>>() {
+                    @Override
+                    public ObservableSource<NewsInfo> apply(List<NewsInfo> newsInfos) throws Exception {
+                        return null;
+                    }
+                })
+                .map(new Function<NewsInfo, NewsMultiItem>() {
+                    @Override
+                    public NewsMultiItem apply(NewsInfo newsInfo) throws Exception {
+                        return new NewsMultiItem(newsInfo);
+                    }
+                })
+                .toList()
+                .compose(mView.<List<NewsMultiItem>>bindToLife())
+                .subscribe(new SingleObserver<List<NewsMultiItem>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
+                    }
+
+                    @Override
+                    public void onSuccess(List<NewsMultiItem> newsMultiItems) {
+                        mView.loadMoreData(newsMultiItems);
+                        mPage++;
+                    }
+
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                });
     }
 }

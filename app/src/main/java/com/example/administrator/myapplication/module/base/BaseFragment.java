@@ -3,13 +3,16 @@ package com.example.administrator.myapplication.module.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.administrator.myapplication.R;
+import com.example.administrator.myapplication.utils.SwipeRefreshHelper;
 import com.example.administrator.myapplication.widget.EmptyLayout;
+import com.orhanobut.logger.Logger;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
@@ -25,6 +28,10 @@ public abstract class BaseFragment<T extends IBasePresenter> extends RxFragment 
     @BindView(R.id.empty_layout)
     EmptyLayout mEmptyLayout;
     protected Context mContext;
+
+    @Nullable
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout mSwipeRefresh;
 
     private View mRootView;
 
@@ -43,6 +50,7 @@ public abstract class BaseFragment<T extends IBasePresenter> extends RxFragment 
             mRootView=inflater.inflate(attachLayout(),null);
             ButterKnife.bind(this,mRootView);
             initView();
+            initSwipeRefresh();
         }
         ViewGroup parent = (ViewGroup)mRootView.getParent();
         if(parent!=null){
@@ -79,7 +87,7 @@ public abstract class BaseFragment<T extends IBasePresenter> extends RxFragment 
     public void showLoading() {
         if (mEmptyLayout != null) {
             mEmptyLayout.setmEmptyStatus(EmptyLayout.STATUS_LOADING);
-//            SwipeRefreshHelper.enableRefresh(mSwipeRefresh, false);
+            SwipeRefreshHelper.enableRefresh(mSwipeRefresh, false);
         }
     }
 
@@ -91,8 +99,8 @@ public abstract class BaseFragment<T extends IBasePresenter> extends RxFragment 
     public void hideLoading() {
         if (mEmptyLayout != null) {
             mEmptyLayout.hide();
-//            SwipeRefreshHelper.enableRefresh(mSwipeRefresh, true);
-//            SwipeRefreshHelper.controlRefresh(mSwipeRefresh, false);
+            SwipeRefreshHelper.enableRefresh(mSwipeRefresh, true);
+            SwipeRefreshHelper.controlRefresh(mSwipeRefresh, false);
         }
     }
 
@@ -104,7 +112,14 @@ public abstract class BaseFragment<T extends IBasePresenter> extends RxFragment 
         }
     }
 
-
+    @Override
+    public void finishRefresh() {
+        Logger.w("finishRefresh");
+        if (mSwipeRefresh != null) {
+            Logger.e("finishRefresh");
+            mSwipeRefresh.setRefreshing(false);
+        }
+    }
     protected abstract void updateViews(boolean isRefresh);
 
     @Override
@@ -118,5 +133,15 @@ public abstract class BaseFragment<T extends IBasePresenter> extends RxFragment 
     }
 
 
+    private void initSwipeRefresh(){
+        if(mSwipeRefresh!=null){
+            SwipeRefreshHelper.init(mSwipeRefresh, new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    updateViews(true);
+                }
+            });
+        }
+    }
     protected abstract int attachLayout();
 }

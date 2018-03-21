@@ -3,6 +3,7 @@ package com.example.administrator.myapplication.api;
 import android.support.annotation.NonNull;
 
 import com.example.administrator.myapplication.AndroidApplication;
+import com.example.administrator.myapplication.api.bean.NewsDetailInfo;
 import com.example.administrator.myapplication.api.bean.NewsInfo;
 import com.example.administrator.myapplication.utils.NetUtil;
 import com.google.gson.Gson;
@@ -151,5 +152,17 @@ public class RetrofitService {
 //                        return Observable.fromIterable(stringListMap.get(newsId));
 //                    }
 //                });
+    }
+
+    public static Observable<NewsDetailInfo> getNewsDetail(final String newsId){
+        return newsApi.getNewsDetail(newsId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Function<Map<String, NewsDetailInfo>, ObservableSource<NewsDetailInfo>>() {
+                    @Override
+                    public ObservableSource<NewsDetailInfo> apply(Map<String, NewsDetailInfo> stringNewsDetailInfoMap) throws Exception {
+                        return Observable.just(stringNewsDetailInfoMap.get(newsId));
+                    }
+                });
     }
 }

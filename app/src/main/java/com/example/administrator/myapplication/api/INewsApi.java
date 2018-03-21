@@ -2,6 +2,7 @@ package com.example.administrator.myapplication.api;
 
 
 
+import com.example.administrator.myapplication.api.bean.NewsDetailInfo;
 import com.example.administrator.myapplication.api.bean.NewsInfo;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+import static com.example.administrator.myapplication.api.RetrofitService.AVOID_HTTP403_FORBIDDEN;
 import static com.example.administrator.myapplication.api.RetrofitService.CACHE_CONTROL_NETWORK;
 
 /**
@@ -35,6 +37,13 @@ public interface INewsApi {
     @GET("nc/article/{type}/{id}/{startPage}-20.html")
     Observable<Map<String, List<NewsInfo>>> getNewsList(@Path("type") String type, @Path("id") String id,
                                                         @Path("startPage") int startPage);
+
+    /**
+     * 获取新闻详情
+     */
+    @Headers(AVOID_HTTP403_FORBIDDEN)
+    @GET("nc/article/{newsId}/full.html")
+    Observable<Map<String,NewsDetailInfo>> getNewsDetail(@Path("newsId") String newsId);
 
     /**
      * 获取专题
