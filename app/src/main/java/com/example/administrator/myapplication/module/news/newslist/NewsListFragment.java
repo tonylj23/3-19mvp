@@ -104,8 +104,10 @@ public class NewsListFragment extends BaseFragment<IBasePresenter> implements IN
         mAdSlider = view.findViewById(R.id.slider_ads);
         SliderHelper.initAdSlider(mContext, mAdSlider, newsInfo);
         int headerLayoutCount = newsListAdapter.getHeaderLayoutCount();
-
-//        newsListAdapter.addHeaderView(view);
+        if(newsListAdapter.getHeaderLayout()!=null&&headerLayoutCount>0){
+            newsListAdapter.removeAllHeaderView();
+        }
+        newsListAdapter.addHeaderView(view);
         Logger.d("headerLayoutCount::"+headerLayoutCount);
     }
 
@@ -124,6 +126,7 @@ public class NewsListFragment extends BaseFragment<IBasePresenter> implements IN
         newsListAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
+
                 newsListPresenter.getMoreData();
             }
         });

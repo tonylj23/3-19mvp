@@ -1,43 +1,117 @@
 package com.example.administrator.myapplication.utils;
 
+import java.util.HashMap;
+
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * Created by Administrator on 2018/3/11 0011.
  */
 
 public class RxBus {
-    private final FlowableProcessor<Object> mBus;
-
-    private RxBus() {
-        // toSerialized method made bus thread safe
-        mBus = PublishProcessor.create().toSerialized();
+    private HashMap<String, CompositeDisposable> mSubscriptionMap;
+    private static volatile RxBus mRxBus;
+    private final Subject<Object> mSubject;
+    //单列模式
+    public static RxBus getIntanceBus(){
+        if (mRxBus==null){
+            synchronized (RxBus.class){
+                if(mRxBus==null){
+                    mRxBus = new RxBus();
+                }
+            }
+        }
+        return mRxBus;
+    }
+    public RxBus(){
+        mSubject = PublishSubject.create().toSerialized();
     }
 
-    public static RxBus get() {
-        return Holder.BUS;
+    public void post(Object o){
+        mSubject.onNext(o);
+    }
+    /**
+     * 返回指定类型的带背压的Flowable实例
+     *
+     * @param <T>
+     * @param type
+     * @return
+     */
+    public <T>Flowable<T> getObservable(Class<T> type){
+        return mSubject.toFlowable(BackpressureStrategy.BUFFER)
+                .ofType(type);
+    }
+    /**
+     * 一个默认的订阅方法
+     *
+     * @param <T>
+     * @param type
+     * @param next
+     * @param error
+     * @return
+     */
+    public <T> Disposable doSubscribe(Class<T> type, Consumer<T> next, Consumer<Throwable> error){
+        return getObservable(type)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(next,error);
+    }
+    /**
+     * 是否已有观察者订阅
+     *
+     * @return
+     */
+    public boolean hasObservers() {
+        return mSubject.hasObservers();
+    }
+    /**
+     * 保存订阅后的disposable
+     * @param o
+     * @param disposable
+     */
+    public void addSubscription(Object o, Disposable disposable) {
+        if (mSubscriptionMap == null) {
+            mSubscriptionMap = new HashMap<>();
+        }
+        String key = o.getClass().getName();
+        if (mSubscriptionMap.get(key) != null) {
+            mSubscriptionMap.get(key).add(disposable);
+        } else {
+            //一次性容器,可以持有多个并提供 添加和移除。
+            CompositeDisposable disposables = new CompositeDisposable();
+            disposables.add(disposable);
+            mSubscriptionMap.put(key, disposables);
+        }
     }
 
-    public void post(Object obj) {
-        mBus.onNext(obj);
-    }
+    /**
+     * 取消订阅
+     * @param o
+     */
+    public void unSubscribe(Object o) {
+        if (mSubscriptionMap == null) {
+            return;
+        }
 
-    public <T> Flowable<T> toFlowable(Class<T> tClass) {
-        return mBus.ofType(tClass);
-    }
+        String key = o.getClass().getName();
+        if (!mSubscriptionMap.containsKey(key)){
+            return;
+        }
+        if (mSubscriptionMap.get(key) != null) {
+            mSubscriptionMap.get(key).dispose();
+        }
 
-    public Flowable<Object> toFlowable() {
-        return mBus;
-    }
-
-    public boolean hasSubscribers() {
-        return mBus.hasSubscribers();
-    }
-
-    private static class Holder {
-        private static final RxBus BUS = new RxBus();
+        mSubscriptionMap.remove(key);
     }
 }

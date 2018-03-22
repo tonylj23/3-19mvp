@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.administrator.myapplication.R;
 import com.example.administrator.myapplication.module.base.BaseActivity;
 import com.example.administrator.myapplication.module.news.main.NewsMainFragment;
+import com.example.administrator.myapplication.module.video.main.VideoMainFragment;
 import com.example.administrator.myapplication.utils.SnackbarUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -54,9 +55,9 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 //                case R.id.nav_photos:
 //                    replaceFragment(R.id.fl_container, new PhotoMainFragment(), mSparseTags.get(R.id.nav_photos));
 //                    break;
-//                case R.id.nav_videos:
-//                    replaceFragment(R.id.fl_container, new VideoMainFragment(), mSparseTags.get(R.id.nav_videos));
-//                    break;
+                case R.id.nav_videos:
+                    replaceFragment(R.id.fl_container, new VideoMainFragment(), mSparseTags.get(R.id.nav_videos));
+                    break;
 //                case R.id.nav_setting:
 //                    SettingsActivity.launch(HomeActivity.this);
 //                    break;

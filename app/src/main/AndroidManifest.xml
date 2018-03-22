@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".module.news.article.NewsArticleActivity"></activity>
+        <activity android:name=".module.video.player.VideoPlayerActivity"></activity>
     </application>
 
 </manifest>

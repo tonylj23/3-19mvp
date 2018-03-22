@@ -29,7 +29,7 @@ public class AndroidApplication extends Application {
     private static Context appContext;
     private static AndroidApplication instance;
 
-    private RxBus mRxBus= RxBus.get();
+    private RxBus mRxBus= RxBus.getIntanceBus();
     private DaoSession daoSession;
 
     @Override

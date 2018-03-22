@@ -4,6 +4,7 @@ package com.example.administrator.myapplication.api;
 
 import com.example.administrator.myapplication.api.bean.NewsDetailInfo;
 import com.example.administrator.myapplication.api.bean.NewsInfo;
+import com.example.administrator.myapplication.local.table.VideoInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,14 @@ public interface INewsApi {
     @Headers(AVOID_HTTP403_FORBIDDEN)
     @GET("nc/article/{newsId}/full.html")
     Observable<Map<String,NewsDetailInfo>> getNewsDetail(@Path("newsId") String newsId);
+
+    /**
+     * 获取视频列表
+     */
+    @Headers(AVOID_HTTP403_FORBIDDEN)
+    @GET("nc/video/list/{id}/n/{startPage}-10.html")
+    Observable<Map<String,List<VideoInfo>>> getVideoList(@Path("id") String id,
+                                                         @Path("startPage") int startPage);
 
     /**
      * 获取专题

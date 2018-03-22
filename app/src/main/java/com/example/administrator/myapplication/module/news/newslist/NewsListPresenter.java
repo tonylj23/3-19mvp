@@ -121,11 +121,12 @@ public class NewsListPresenter implements IBasePresenter {
     @Override
     public void getMoreData() {
         RetrofitService.getNewsList(mNewsId, mPage)
-                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(new Function<List<NewsInfo>, ObservableSource<NewsInfo>>() {
                     @Override
                     public ObservableSource<NewsInfo> apply(List<NewsInfo> newsInfos) throws Exception {
-                        return null;
+                        return Observable.fromIterable(newsInfos);
                     }
                 })
                 .map(new Function<NewsInfo, NewsMultiItem>() {

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.example.administrator.myapplication.AndroidApplication;
 import com.example.administrator.myapplication.api.bean.NewsDetailInfo;
 import com.example.administrator.myapplication.api.bean.NewsInfo;
+import com.example.administrator.myapplication.local.table.VideoInfo;
 import com.example.administrator.myapplication.utils.NetUtil;
 import com.google.gson.Gson;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -162,6 +163,19 @@ public class RetrofitService {
                     @Override
                     public ObservableSource<NewsDetailInfo> apply(Map<String, NewsDetailInfo> stringNewsDetailInfoMap) throws Exception {
                         return Observable.just(stringNewsDetailInfoMap.get(newsId));
+                    }
+                });
+    }
+
+    public static Observable<List<VideoInfo>> getVideoList(final String videoId, int page){
+        Observable<Map<String, List<VideoInfo>>> videoList = newsApi.getVideoList(videoId, page * INCREASE_PAGE / 2);
+        return videoList
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Function<Map<String, List<VideoInfo>>, ObservableSource<List<VideoInfo>>>() {
+                    @Override
+                    public ObservableSource<List<VideoInfo>> apply(Map<String, List<VideoInfo>> stringListMap) throws Exception {
+                        return Observable.just(stringListMap.get(videoId));
                     }
                 });
     }
