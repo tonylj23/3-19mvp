@@ -5,7 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/3-19mvp.iml" filepath="$PROJECT_DIR$/3-19mvp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/downloaderLib/downloaderLib.iml" filepath="$PROJECT_DIR$/downloaderLib/downloaderLib.iml" />
+      <module fileurl="file://E:\AndroidStudioProjects\3-19mvp\downloaderLib\downloaderLib.iml" filepath="E:\AndroidStudioProjects\3-19mvp\downloaderLib\downloaderLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/playerview/playerview.iml" filepath="$PROJECT_DIR$/playerview/playerview.iml" />
+      <module fileurl="file://E:\AndroidStudioProjects\3-19mvp\playerview\playerview.iml" filepath="E:\AndroidStudioProjects\3-19mvp\playerview\playerview.iml" />
     </modules>
   </component>
 </project>

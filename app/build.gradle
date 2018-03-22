@@ -13,6 +13,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled true
+        ndk {
+            abiFilter "armeabi-v7a" //, "armeabi", "x86" 按需设置
+        }
     }
     buildTypes {
         release {
