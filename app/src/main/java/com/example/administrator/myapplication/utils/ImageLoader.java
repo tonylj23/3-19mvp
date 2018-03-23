@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
 import java.util.concurrent.ExecutionException;
@@ -94,13 +95,13 @@ public final class ImageLoader {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-//    public static String calePhotoSize(Context context, String url) throws ExecutionException, InterruptedException {
-//        File file = Glide.with(context).load(url)
-//                .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
-//        // First decode with inJustDecodeBounds=true to check dimensions
-//        final BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inJustDecodeBounds = true;
-//        BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-//        return options.outWidth + "*" + options.outHeight;
-//    }
+    public static String calePhotoSize(Context context, String url) throws ExecutionException, InterruptedException {
+        File file = Glide.with(context).load(url)
+                .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+        return options.outWidth + "*" + options.outHeight;
+    }
 }

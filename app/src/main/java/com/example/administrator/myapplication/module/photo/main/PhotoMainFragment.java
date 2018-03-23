@@ -11,6 +11,7 @@ import com.example.administrator.myapplication.module.base.BaseFragment;
 import com.example.administrator.myapplication.module.base.IBasePresenter;
 import com.example.administrator.myapplication.module.base.IRxBusPresenter;
 import com.example.administrator.myapplication.module.news.newslist.NewsListFragment;
+import com.example.administrator.myapplication.module.photo.welfare.WelfareListFragment;
 import com.flyco.tablayout.SlidingTabLayout;
 
 import java.util.ArrayList;
@@ -45,8 +46,8 @@ public class PhotoMainFragment extends BaseFragment<IRxBusPresenter> implements 
         pagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
         initToolBar(mToolBar,true,"图片");
         ArrayList<Fragment> fragments = new ArrayList<>();
-        fragments.add(new NewsListFragment());
-        pagerAdapter.setItems(fragments, Arrays.asList(new String[]{"美女", "福利", "生活"}));
+        fragments.add(new WelfareListFragment());
+        pagerAdapter.setItems(fragments, Arrays.asList(new String[]{"福利"}));
         mViewPager.setAdapter(pagerAdapter);
         mTabLayout.setViewPager(mViewPager);
         presenter = new PhotoMainPresenter(this);

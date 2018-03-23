@@ -7,6 +7,8 @@
     <!-- TabLayout -->
     <dimen name="tab_layout_height">38dp</dimen>
 
+    <dimen name="photo_margin_width">1dp</dimen>
+
     <!-- News Detail-->
     <dimen name="related_news_height">310dp</dimen>
     <dimen name="news_detail_toolbar_height">90dp</dimen>

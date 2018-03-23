@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.example.administrator.myapplication.AndroidApplication;
 import com.example.administrator.myapplication.api.bean.NewsDetailInfo;
 import com.example.administrator.myapplication.api.bean.NewsInfo;
+import com.example.administrator.myapplication.api.bean.WelfarePhotoInfo;
+import com.example.administrator.myapplication.api.bean.WelfarePhotoList;
 import com.example.administrator.myapplication.local.table.VideoInfo;
 import com.example.administrator.myapplication.utils.NetUtil;
 import com.google.gson.Gson;
@@ -55,6 +57,7 @@ public class RetrofitService {
     private static final String WELFARE_HOST = "http://gank.io/";
     private static final int INCREASE_PAGE = 20;
     private static INewsApi newsApi;
+    private static IWelfareApi iWelfareApi;
 
     private RetrofitService(){
         throw new AssertionError();
@@ -76,6 +79,15 @@ public class RetrofitService {
                 .baseUrl(NEWS_HOST)
                 .build();
         newsApi = retrofit.create(INewsApi.class);
+
+
+         retrofit = new Retrofit.Builder()
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .baseUrl(WELFARE_HOST)
+                .build();
+        iWelfareApi = retrofit.create(IWelfareApi.class);
     }
 
     private static final Interceptor sLoggingInterceptor=new Interceptor() {
@@ -130,7 +142,7 @@ public class RetrofitService {
 
     public static Observable<List<NewsInfo>> getNewsList(final String newsId, int page){
         String type;
-        if(newsId.equals(HEAD_LINE_NEWS)){
+        if(HEAD_LINE_NEWS.equals(newsId)){
             type="headline";
         }else {
             type="list";
@@ -176,6 +188,21 @@ public class RetrofitService {
                     @Override
                     public ObservableSource<List<VideoInfo>> apply(Map<String, List<VideoInfo>> stringListMap) throws Exception {
                         return Observable.just(stringListMap.get(videoId));
+                    }
+                });
+    }
+
+    public static Observable<WelfarePhotoInfo> getWelfarePhoto(int page){
+        return iWelfareApi.getWelfarePhoto(page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Function<WelfarePhotoList, ObservableSource<WelfarePhotoInfo>>() {
+                    @Override
+                    public ObservableSource<WelfarePhotoInfo> apply(WelfarePhotoList welfarePhotoList) throws Exception {
+                        if(welfarePhotoList.getResults().size()==0){
+                            return Observable.empty();
+                        }
+                        return Observable.fromIterable(welfarePhotoList.getResults());
                     }
                 });
     }
