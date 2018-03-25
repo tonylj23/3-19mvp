@@ -1,12 +1,15 @@
 package com.example.administrator.myapplication.api.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by long on 2016/10/10.
  */
 
-public class WelfarePhotoInfo {
+public class WelfarePhotoInfo implements Parcelable{
 
     /**
      * _id : 57facc74421aa95de3b8ab6b
@@ -31,6 +34,31 @@ public class WelfarePhotoInfo {
     private String who;
     // 保存图片宽高
     private String pixel;
+
+    protected WelfarePhotoInfo(Parcel in) {
+        id = in.readString();
+        createdAt = in.readString();
+        desc = in.readString();
+        publishedAt = in.readString();
+        source = in.readString();
+        type = in.readString();
+        url = in.readString();
+        used = in.readByte() != 0;
+        who = in.readString();
+        pixel = in.readString();
+    }
+
+    public static final Creator<WelfarePhotoInfo> CREATOR = new Creator<WelfarePhotoInfo>() {
+        @Override
+        public WelfarePhotoInfo createFromParcel(Parcel in) {
+            return new WelfarePhotoInfo(in);
+        }
+
+        @Override
+        public WelfarePhotoInfo[] newArray(int size) {
+            return new WelfarePhotoInfo[size];
+        }
+    };
 
     public String getPixel() {
         return pixel;
@@ -126,5 +154,24 @@ public class WelfarePhotoInfo {
                 ", who='" + who + '\'' +
                 ", pixel='" + pixel + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(createdAt);
+        parcel.writeString(desc);
+        parcel.writeString(publishedAt);
+        parcel.writeString(source);
+        parcel.writeString(type);
+        parcel.writeString(url);
+        parcel.writeByte((byte) (used ? 1 : 0));
+        parcel.writeString(who);
+        parcel.writeString(pixel);
     }
 }

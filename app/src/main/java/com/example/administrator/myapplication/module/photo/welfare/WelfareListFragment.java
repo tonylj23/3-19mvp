@@ -1,10 +1,13 @@
 package com.example.administrator.myapplication.module.photo.welfare;
 
+import android.content.Intent;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.View;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.administrator.myapplication.R;
 import com.example.administrator.myapplication.adapter.WelfarePhotoAdapter;
 import com.example.administrator.myapplication.api.bean.WelfarePhotoInfo;
@@ -13,6 +16,8 @@ import com.example.administrator.myapplication.module.base.IBasePresenter;
 import com.example.administrator.myapplication.module.base.IBaseView;
 import com.example.administrator.myapplication.module.base.ILoadDataView;
 import com.example.administrator.myapplication.module.base.IRxBusPresenter;
+import com.example.administrator.myapplication.module.photo.bigphoto.BigActivity;
+import com.example.administrator.myapplication.module.photo.bigphoto.BigPhotoActivity;
 
 import java.util.List;
 
@@ -52,6 +57,14 @@ public class WelfareListFragment extends BaseFragment<IBasePresenter> implements
 //        view.setHasFixedSize(true);
         mRvPhotoList.setLayoutManager(layoutManager);
         mRvPhotoList.setItemAnimator(new DefaultItemAnimator());
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(getActivity(),BigPhotoActivity.class);
+                intent.putExtra("data",(WelfarePhotoInfo)adapter.getItem(position));
+                getActivity().startActivity(intent);
+            }
+        });
     }
 
     @Override

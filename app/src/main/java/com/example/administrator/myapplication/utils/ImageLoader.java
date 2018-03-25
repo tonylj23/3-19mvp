@@ -25,7 +25,7 @@ public final class ImageLoader {
     }
 
 
-//    public static void loadFit(Context context, String url, ImageView view, int defaultResId) {
+    //    public static void loadFit(Context context, String url, ImageView view, int defaultResId) {
 //        if (PreferencesUtils.isShowImageAlways(context) || NetUtil.isWifiConnected(context)) {
 //            view.setScaleType(ImageView.ScaleType.FIT_XY);
 //            Glide.with(context).load(url).fitCenter().dontAnimate().placeholder(defaultResId).into(view);
@@ -33,10 +33,13 @@ public final class ImageLoader {
 //            view.setImageResource(defaultResId);
 //        }
 //    }
+    public static void loadCenterCrop(Context context, String url, ImageView view, RequestListener listener) {
+        Glide.with(context).load(url).centerCrop().dontAnimate().listener(listener).into(view);
+    }
 
     public static void loadCenterCrop(Context context, String url, ImageView view, int defaultResId) {
 //        if (PreferencesUtils.isShowImageAlways(context) || NetUtil.isWifiConnected(context)) {
-            Glide.with(context).load(url).centerCrop().dontAnimate().placeholder(defaultResId).into(view);
+        Glide.with(context).load(url).centerCrop().dontAnimate().placeholder(defaultResId).into(view);
 //        } else {
 //            view.setImageResource(defaultResId);
 //        }
