@@ -28,6 +28,7 @@ public class AndroidApplication extends Application {
     private static final String DB_NAME="news-db";
     private static Context appContext;
     private static AndroidApplication instance;
+    private static String testString;
 
     private RxBus mRxBus= RxBus.getIntanceBus();
     private DaoSession daoSession;
